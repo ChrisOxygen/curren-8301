@@ -1,0 +1,118 @@
+"use client";
+
+import Image from "next/image";
+import { FaRegCheckSquare } from "react-icons/fa";
+import { WATCH_FEATURES } from "@/constants/product-details";
+import { PRODUCT, PRODUCT_IMAGES } from "@/constants/product";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+
+function WatchDetails() {
+  return (
+    <div className="flex flex-col gap-4 w-full border-3 border-brand-primary-dark p-4">
+      {/* Mobile: autoplay slider, one image at a time */}
+      <div className="sm:hidden w-full overflow-hidden">
+        <Carousel
+          plugins={[Autoplay({ delay: 2500, stopOnInteraction: false })]}
+          opts={{ loop: true }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-0">
+            {PRODUCT_IMAGES.WATCH_GALLERY.map((src, i) => (
+              <CarouselItem key={i} className="pl-0 basis-full">
+                <Image
+                  alt={PRODUCT.WATCH_NAME}
+                  src={src}
+                  width={1000}
+                  height={1000}
+                  className="w-full object-cover"
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </div>
+
+      {/* Desktop: side-by-side */}
+      <div className="hidden sm:flex w-full">
+        {PRODUCT_IMAGES.WATCH_GALLERY.map((src, i) => (
+          <Image
+            key={i}
+            alt={PRODUCT.WATCH_NAME}
+            src={src}
+            width={1000}
+            height={1000}
+            className="basis-1/3 w-[200px] object-cover"
+          />
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <h2 className="font-semibold text-2xl sm:text-3xl md:text-4xl text-brand-primary-dark">
+          {PRODUCT.WATCH_NAME}
+        </h2>
+        <span className="font-semibold">{PRODUCT.WATCH_TAGLINE}</span>
+      </div>
+      <div className="flex p-2 w-full bg-brand-surface">
+        <ul className="flex gap-3 flex-col">
+          {WATCH_FEATURES.map((feature) => (
+            <li key={feature} className="flex gap-4 sm:items-center">
+              <span className="text-brand-primary mt-1 sm:mt-0">
+                <FaRegCheckSquare />
+              </span>
+              <span>{feature}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function BraceletDetails() {
+  return (
+    <div className="flex flex-col sm:flex-row gap-4 w-full border-3 bg-brand-surface border-brand-primary-dark p-4">
+      <Image
+        alt={PRODUCT.BRACELET_NAME}
+        src={PRODUCT_IMAGES.BRACELET}
+        width={1000}
+        height={1000}
+        className="w-full sm:basis-1/4 sm:w-auto h-[300px] sm:h-[210px] object-cover"
+      />
+      <div className="flex flex-col gap-2 justify-center">
+        <span className="text-brand-primary text-xl sm:text-2xl md:text-3xl italic">
+          (FREE GIFT)
+        </span>
+        <h3 className="text-brand-primary-dark text-2xl sm:text-3xl md:text-4xl font-semibold">
+          {PRODUCT.BRACELET_NAME}
+        </h3>
+        <span className="text-base sm:text-lg font-semibold">
+          {PRODUCT.BRACELET_DESCRIPTION}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export default function ProductDetails() {
+  return (
+    <section className="section-y-p bg-background">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col gap-10">
+        <div className="flex flex-col sm:items-center gap-2">
+          <h2 className="font-semibold uppercase text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-brand-primary-dark sm:text-center">
+            {PRODUCT.NAME.toUpperCase()}
+          </h2>
+          <span className="text-lg font-semibold">{PRODUCT.TAGLINE}</span>
+        </div>
+        <div className="flex flex-col gap-8">
+          <WatchDetails />
+          <BraceletDetails />
+        </div>
+      </div>
+    </section>
+  );
+}
