@@ -18,9 +18,13 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Nibosi Ruby Prestige | Premium Watch & Bracelet Set",
+  title: "Curren Meridian Bronze | Premium Watch & Bracelet Set",
   description:
-    "Command every moment with the Nibosi Ruby Prestige Day-Date Watch and Golden Dynasty Bracelet. Free delivery in Lagos. Pay on delivery.",
+    "Elevate every moment with the Curren Meridian Bronze Leather Watch and Titan's Edge Premium Leather Bracelet. Swiss-inspired precision, premium quality. Free delivery in Lagos. Pay on delivery.",
+  icons: {
+    icon: "/assets/white-on-black-bg-icon.png",
+    apple: "/assets/white-on-black-bg-icon.png",
+  },
 };
 
 export default function RootLayout({
