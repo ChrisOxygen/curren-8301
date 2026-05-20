@@ -3,25 +3,31 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { usePostHog } from "posthog-js/react";
 import { Spinner } from "@/components/ui/spinner";
 import { PRICING, formatNaira } from "@/constants/pricing";
+import { EVENTS } from "@/lib/posthog";
 
 type Props = {
   variant?: "hero" | "default";
   arrowColor?: "white" | "black";
+  location?: string;
 };
 
 export default function PricingCTA({
   variant = "default",
   arrowColor = "white",
+  location,
 }: Props) {
   const isHero = variant === "hero";
   const arrowFilter =
     arrowColor === "black" ? "brightness(0)" : "brightness(0) invert(1)";
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const ph = usePostHog();
 
   function handleClick() {
+    ph?.capture(EVENTS.CTA_CLICKED, { location });
     startTransition(() => {
       router.push("/checkout");
     });

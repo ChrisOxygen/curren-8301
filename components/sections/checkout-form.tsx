@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { usePostHog } from "posthog-js/react";
 import { useOrderStore } from "@/store/order";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +16,7 @@ import { PRICING, formatNaira, LINE_ITEMS } from "@/constants/pricing";
 import { PRODUCT, PRODUCT_IMAGES } from "@/constants/product";
 import { COPY, QUANTITY_OPTIONS } from "@/constants/copy";
 import { checkoutSchema, type CheckoutFormValues } from "@/validators/checkout";
+import { EVENTS } from "@/lib/posthog";
 
 function FieldWrapper({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-col gap-1.5">{children}</div>;
@@ -64,6 +66,9 @@ export default function CheckoutForm() {
   const setOrder = useOrderStore((s) => s.setOrder);
   const orderData = useOrderStore((s) => s.orderData);
   const [isPending, startTransition] = useTransition();
+  const [webhookError, setWebhookError] = useState<string | null>(null);
+  const ph = usePostHog();
+  const hasStarted = useRef(false);
 
   const {
     register,
@@ -82,12 +87,75 @@ export default function CheckoutForm() {
     }
   }, [orderData, reset]);
 
+  function trackStart() {
+    if (hasStarted.current) return;
+    hasStarted.current = true;
+    ph?.capture(EVENTS.CHECKOUT_STARTED);
+  }
+
   function onSubmit(data: CheckoutFormValues) {
-    startTransition(() => {
+    setWebhookError(null);
+    startTransition(async () => {
       if (orderData && isSameData(data, orderData)) {
+        ph?.capture(EVENTS.CHECKOUT_DUPLICATE_SKIPPED);
         router.push("/thank-you");
         return;
       }
+
+      ph?.capture(EVENTS.CHECKOUT_SUBMITTED, {
+        quantity: data.quantity,
+        has_email: !!data.email,
+        has_alt_phone: !!data.altPhone,
+        has_state: !!data.state,
+      });
+
+      try {
+        const res = await fetch(process.env.NEXT_PUBLIC_LEAD_WEBHOOK_URL!, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sku: "curren-8301",
+            firstName: data.firstName,
+            lastName: data.lastName || undefined,
+            mainPhone: data.mainPhone,
+            altPhone: data.altPhone || undefined,
+            quantity: data.quantity,
+            email: data.email || undefined,
+            deliveryAddress: data.deliveryAddress || undefined,
+            state: data.state || undefined,
+          }),
+        });
+        if (!res.ok) {
+          const payload = await res.json().catch(() => null);
+          const code = payload?.error?.code as string | undefined;
+          const message =
+            code === "bad_request"
+              ? "It looks like you've already placed this order. We'll be in touch with you soon!"
+              : code === "not_found"
+                ? "This product is currently unavailable. Please contact us directly."
+                : code === "validation_error"
+                  ? "Some of your details look incorrect. Please review and try again."
+                  : "Something went wrong on our end. Please try again in a moment.";
+          ph?.capture(EVENTS.CHECKOUT_ERROR, {
+            error_code: code,
+            status: res.status,
+            is_network_error: false,
+          });
+          setWebhookError(message);
+          return;
+        }
+      } catch (err) {
+        ph?.capture(EVENTS.CHECKOUT_ERROR, {
+          error_message: String(err),
+          is_network_error: true,
+        });
+        setWebhookError(
+          "Network error — please check your connection and try again.",
+        );
+        return;
+      }
+
+      ph?.capture(EVENTS.CHECKOUT_SUCCESS, { quantity: data.quantity });
       setOrder(data);
       router.push("/thank-you");
     });
@@ -146,6 +214,7 @@ export default function CheckoutForm() {
         {/* Right — form */}
         <div className="bg-brand-surface max-w-3xl w-full lg:max-w-full justify-self-center rounded p-4 sm:p-6 flex flex-col gap-5">
           <form
+            onFocus={trackStart}
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-5"
           >
@@ -253,6 +322,12 @@ export default function CheckoutForm() {
               />
               <FieldError message={errors.state?.message} />
             </FieldWrapper>
+
+            {webhookError && (
+              <div className="rounded border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+                {webhookError}
+              </div>
+            )}
 
             <button
               type="submit"

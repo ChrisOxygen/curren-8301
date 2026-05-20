@@ -37,7 +37,7 @@ export default function ProductPricing() {
               </div>
             ))}
           </div>
-          <PricingTotals />
+          <PricingTotals location="product_pricing" />
         </div>
       </div>
     </section>
