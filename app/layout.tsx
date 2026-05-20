@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
 import { Lora, Poppins } from "next/font/google";
+import dynamic from "next/dynamic";
 import "./globals.css";
 import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { PurchaseToast } from "@/components/purchase-toast";
-import { PostHogProvider } from "@/components/providers/posthog-provider";
+
+const PostHogProvider = dynamic(
+  () =>
+    import("@/components/providers/posthog-provider").then(
+      (m) => m.PostHogProvider
+    ),
+  { ssr: false }
+);
 
 const lora = Lora({
   variable: "--font-lora",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
+  display: "swap",
 });
 
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {

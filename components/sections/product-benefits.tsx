@@ -1,4 +1,4 @@
-import { FaTimesCircle, FaCheckCircle } from "react-icons/fa";
+import { XCircle, CheckCircle2 } from "lucide-react";
 import {
   OTHER_WATCHES,
   OUR_WATCH_BENEFITS,
@@ -14,7 +14,6 @@ export default function ProductBenefits() {
           "url('/assets/imgi_6_imgi_301_a36e4d3995c65fe3576c2647a1c96ad29838997d_original-rfr7dcej5471yoos2xwgsvg1lvry4yfsz7sdrct8js.webp')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
       }}
     >
       <div className="absolute inset-0 bg-[#010000]/90 pointer-events-none" />
@@ -34,7 +33,7 @@ export default function ProductBenefits() {
                   className="flex text-background  gap-2 items-start"
                 >
                   <span className="text-red-500 mt-1 shrink-0">
-                    <FaTimesCircle />
+                    <XCircle size={16} />
                   </span>
                   <span>{item}</span>
                 </li>
@@ -56,7 +55,7 @@ export default function ProductBenefits() {
                   className="flex text-background  gap-2 items-start"
                 >
                   <span className="text-green-500 mt-1 shrink-0">
-                    <FaCheckCircle />
+                    <CheckCircle2 size={16} />
                   </span>
                   <span>{item}</span>
                 </li>

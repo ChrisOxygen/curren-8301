@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FaRegCheckSquare } from "react-icons/fa";
+import { CheckSquare } from "lucide-react";
 import { WATCH_FEATURES } from "@/constants/product-details";
 import { PRODUCT, PRODUCT_IMAGES } from "@/constants/product";
 import {
@@ -62,7 +62,7 @@ function WatchDetails() {
           {WATCH_FEATURES.map((feature) => (
             <li key={feature} className="flex gap-4 sm:items-center">
               <span className="text-brand-primary mt-1 sm:mt-0">
-                <FaRegCheckSquare />
+                <CheckSquare size={16} />
               </span>
               <span>{feature}</span>
             </li>

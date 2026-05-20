@@ -1,4 +1,4 @@
-import { FaCheck } from "react-icons/fa";
+import { Check } from "lucide-react";
 import { GUARANTEE_ITEMS } from "@/constants/guarantee";
 import { COPY } from "@/constants/copy";
 
@@ -28,7 +28,7 @@ export default function Guarantee() {
               {GUARANTEE_ITEMS.map((item) => (
                 <li key={item} className="flex gap-2 items-start">
                   <span className="text-brand-primary mt-1 shrink-0">
-                    <FaCheck />
+                    <Check size={16} />
                   </span>
                   <span>{item}</span>
                 </li>

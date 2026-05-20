@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { Button } from "../ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { FaGripLinesVertical } from "react-icons/fa6";
+import { GripVertical } from "lucide-react";
 import { COPY } from "@/constants/copy";
 import { EVENTS } from "@/lib/posthog";
 
@@ -15,13 +15,13 @@ const MarqueeItem = () => (
       {COPY.MARQUEE_ITEM_1}
     </span>
     <span className="shrink-0 text-brand-primary mx-4">
-      <FaGripLinesVertical />
+      <GripVertical size={16} />
     </span>
     <span className="shrink-0 text-white font-sans font-semibold">
       {COPY.MARQUEE_ITEM_2}
     </span>
     <span className="shrink-0 text-brand-primary mx-4">
-      <FaGripLinesVertical />
+      <GripVertical size={16} />
     </span>
   </div>
 );
@@ -53,7 +53,7 @@ export default function ScrollHeaderCTA() {
       <div className="hidden md:flex lg:hidden flex-1 items-center gap-3 text-brand-primary font-sans font-semibold">
         <span>{COPY.MARQUEE_ITEM_1}</span>
         <span className="text-gray-300">
-          <FaGripLinesVertical />
+          <GripVertical size={16} />
         </span>
         <span>{COPY.MARQUEE_ITEM_2}</span>
       </div>

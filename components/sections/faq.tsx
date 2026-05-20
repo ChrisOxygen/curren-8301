@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePostHog } from "posthog-js/react";
-import { FaMinus, FaPlus } from "react-icons/fa6";
+import { Minus, Plus } from "lucide-react";
 import { FAQS, type FAQ } from "@/constants/faqs";
 import { COPY } from "@/constants/copy";
 import { EVENTS } from "@/lib/posthog";
@@ -34,7 +34,7 @@ function FAQItem({
             isOpen ? "text-brand-primary" : "text-[#010000]"
           }`}
         >
-          {isOpen ? <FaMinus size={16} /> : <FaPlus size={16} />}
+          {isOpen ? <Minus size={16} /> : <Plus size={16} />}
         </span>
       </button>
       <div

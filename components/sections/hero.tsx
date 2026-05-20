@@ -25,9 +25,11 @@ export default function Hero() {
         <Image
           alt={PRODUCT.NAME}
           src={PRODUCT_IMAGES.HERO}
-          width={2000}
-          height={2000}
-          className="rounded aspect-square sm:aspect-video object-cover"
+          width={1024}
+          height={767}
+          priority
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1024px"
+          className="rounded w-full object-cover"
         />
       </div>
     </section>
