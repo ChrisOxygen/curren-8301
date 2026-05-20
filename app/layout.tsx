@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
 import { Lora, Poppins } from "next/font/google";
-import dynamic from "next/dynamic";
 import "./globals.css";
 import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { PurchaseToast } from "@/components/purchase-toast";
-
-const PostHogProvider = dynamic(
-  () =>
-    import("@/components/providers/posthog-provider").then(
-      (m) => m.PostHogProvider
-    ),
-  { ssr: false }
-);
+import { PostHogClientProvider } from "@/components/providers/posthog-client";
 
 const lora = Lora({
   variable: "--font-lora",
@@ -50,12 +42,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col">
-        <PostHogProvider>
+        <PostHogClientProvider>
           {children}
           <Footer />
           <Toaster position="bottom-left" />
           <PurchaseToast />
-        </PostHogProvider>
+        </PostHogClientProvider>
       </body>
     </html>
   );
