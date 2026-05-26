@@ -42,6 +42,13 @@ export default function RootLayout({
       className={`${lora.variable} ${poppins.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <link
+          rel="preload"
+          href="/assets/black-gears-texture.jpeg"
+          as="image"
+        />
+      </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         <Script id="meta-pixel" strategy="afterInteractive">
           {`
